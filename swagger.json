@@ -1,0 +1,234 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Introdução ao SOLID",
+    "description": "Documentando rotas do desafio.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Nalisson Gomes",
+      "email": "nalissongm.pro@gmail.com",
+      "url": "https://nalissongomes.netlify.app"
+    }
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Listar usuários",
+        "description": "Apenas o `admin` pode acessar esse recurso",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "header",
+            "required": true,
+            "description": "ID do usuário para verificar permissão",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "a1e95b7b-d08e-4b86-81d8-261fdb288c7e"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Requisição aceita e processada com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Usuário não tem permição para fazer acessar esse recurso."
+          },
+          "404": {
+            "description": "Não existe nenhum usuário com o user_id submetido."
+          }
+        }
+      },
+      "post": {
+        "tags": ["Users"],
+        "summary": "Criar nove usuário",
+        "description": "Cria um novo usuário e retorna o usuário criado",
+        "requestBody": {
+          "description": "Qualquer coisa",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example":"Jonh Doe"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "jonhdoe@email.com"
+                  }
+                },
+                "required": ["name", "email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuário Criado com sucesso.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Já existe um usuário com esse email cadastrado."
+          }
+        }
+      }
+    },
+    "/users/{user_id}": {
+      "get": {
+        "tags": ["Users"],
+        "summary": "Buscar usuário",
+        "description": "Recebe o id do usuário e retorna um objeto JSON com o usuário referente ao id passado",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "description": "ID do usuário",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "a1e95b7b-d08e-4b86-81d8-261fdb288c7e"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso!",
+            "content":{
+              "application/json":{
+                "schema":{
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Bad Request: Usuário não encontrado."
+          }
+        }
+      }
+    },
+    "/users/{user_id}/admin": {
+      "patch": {
+        "tags": ["Users"],
+        "summary": "Alterar admin",
+        "description": "Recebe o id de um usuário e altera o admin desse usuário para true.",
+        "parameters": [
+          {
+            "name": "user_id",
+            "in": "path",
+            "required": true,
+            "description": "ID do usuário",
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "example": "a1e95b7b-d08e-4b86-81d8-261fdb288c7e"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operação realizada com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserAdmin"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Usuário não encontrado."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "a1e95b7b-d08e-4b86-81d8-261fdb288c7e"
+          },
+          "name": {
+            "type": "string",
+            "example": "Jonh Doe"
+          },
+          "admin": {
+            "type": "boolean",
+            "example": false
+          },
+          "email":{
+            "type": "string",
+            "example": "jonhdoe@email.com"
+          },
+          "created_at": {
+            "type": "string",
+            "example": "2022-04-09T18:53:29.132Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "example": "2022-04-09T18:53:29.132Z"
+          }
+        }
+      },
+      "UserAdmin": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "a1e95b7b-d08e-4b86-81d8-261fdb288c7e"
+          },
+          "name": {
+            "type": "string",
+            "example": "Jonh Doe"
+          },
+          "admin": {
+            "type": "boolean",
+            "example": true
+          },
+          "email":{
+            "type": "string",
+            "example": "jonhdoe@email.com"
+          },
+          "created_at": {
+            "type": "string",
+            "example": "2022-04-09T18:53:29.132Z"
+          },
+          "updated_at": {
+            "type": "string",
+            "example": "2022-04-09T18:53:29.132Z"
+          }
+        }
+      }
+    }
+  }
+}
+
+
